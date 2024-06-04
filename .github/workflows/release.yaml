@@ -19,17 +19,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    env:
+      tag: ${{ inputs.tag || github.event.ref_names }}
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
         with:
-          ref: ${{ inputs.tag || github.event.ref_names }}
+          ref: ${{ env.tag }}
 
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.19' # Adjust to your preferred Go version
+          go-version: '1.22.1' # Adjust to your preferred Go version
 
       - name: Cache Go modules
         uses: actions/cache@v2
@@ -45,14 +47,22 @@ jobs:
       - name: Build the application
         run: go build -o myapp
 
+
+      - name: Create a release body
+        run: |
+          if  [[ -n "${{ inputs.release_notes }}" ]]; then
+            echo "RELEASE_BODY="Release Notes: \n ${{ inputs.release_notes }}" >> $GITHUB_ENV
+          fi
+
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ matrix.tag }}
-          release_name: Release ${{ matrix.tag }}
+          tag_name: ${{ env.tag }}
+          release_name: Release ${{ env.tag }}
           body: |
-            Automatic release for tag ${{ matrix.tag }}
+            Release for tag ${{ env.tag }}
+            ${{ env.RELEASE_BODY }}
           draft: false
           prerelease: false
         env:
