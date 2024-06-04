@@ -17,7 +17,7 @@ on:
         type: string
 
 jobs:
-  build:
+  linux-build:
     runs-on: ubuntu-latest
     env:
       tag: ${{ inputs.tag || github.event.ref_names }}
@@ -42,11 +42,12 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Install dependencies
-        run: go mod download
+        run: |
+          apt-get install libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+          go mod download
 
       - name: Build the application
         run: go build -o myapp
-
 
       - name: Create a release body
         run: |
