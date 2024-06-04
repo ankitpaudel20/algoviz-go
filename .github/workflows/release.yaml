@@ -11,17 +11,23 @@ on:
         description: 'Release notes in markdown'
         required: true
         type: string
+      tag:
+        description: which tag to release on
+        required: true
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        tag: ${{ github.event.ref_names }}
+        tag: ${{ inputs.tag || github.event.ref_names }}
 
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ inputs.tag || github.event.ref_names }}
 
       - name: Set up Go
         uses: actions/setup-go@v3
