@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       tag: ${{ inputs.tag || github.event.ref_names }}
+      rel_note_file: release_note.txt
 
     steps:
       - name: Check out the repository
@@ -48,32 +49,18 @@ jobs:
           go mod download
 
       - name: Build the application
-        run: go build -o myapp
+        run: go build -o algoviz
 
       - name: Create a release body
         run: |
           if  [[ -n "${{ inputs.release_notes }}" ]]; then
-            echo "RELEASE_BODY='Release Notes: \n ${{ inputs.release_notes }}'" >> $GITHUB_ENV
+            echo -e "Automated release from Actions" >> ${{ env.rel_note_file }}
+            echo -e "Release Notes: \n" >> ${{ env.rel_note_file }}
+            echo -e "${{ inputs.release_notes }}" >> ${{ env.rel_note_file }}
           fi
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.tag }}
-          release_name: Release ${{ env.tag }}
-          body: |
-            Release for tag ${{ env.tag }}
-            ${{ env.RELEASE_BODY }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload release asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./myapp
-          asset_name: myapp_${{ matrix.tag }}
-          asset_content_type: application/octet-stream
+          files: ./algoviz
+          body_path: ${{ env.rel_note_file }} 
