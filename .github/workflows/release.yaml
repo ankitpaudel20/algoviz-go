@@ -18,8 +18,7 @@ on:
 
 jobs:
   linux-build:
-    permissions:
-      contents: write
+    permissions: write-all
     runs-on: ubuntu-latest
     env:
       tag: ${{ inputs.tag || github.event.ref_names }}
