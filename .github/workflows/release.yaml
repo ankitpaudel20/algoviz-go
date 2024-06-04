@@ -64,3 +64,4 @@ jobs:
         with:
           files: ./algoviz
           body_path: ${{ env.rel_note_file }} 
+          tag_name: ${{ env.tag }}
