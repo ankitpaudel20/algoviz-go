@@ -19,10 +19,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        tag: ${{ inputs.tag || github.event.ref_names }}
-
+    
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
