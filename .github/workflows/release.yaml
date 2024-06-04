@@ -52,7 +52,7 @@ jobs:
       - name: Create a release body
         run: |
           if  [[ -n "${{ inputs.release_notes }}" ]]; then
-            echo "RELEASE_BODY="Release Notes: \n ${{ inputs.release_notes }}" >> $GITHUB_ENV
+            echo "RELEASE_BODY='Release Notes: \n ${{ inputs.release_notes }}'" >> $GITHUB_ENV
           fi
 
       - name: Create release
