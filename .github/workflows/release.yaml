@@ -40,6 +40,9 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      
+      - name: Setup OpenGL
+        uses: openrndr/setup-opengl@v1.1
 
       - name: Install dependencies
         run: |
