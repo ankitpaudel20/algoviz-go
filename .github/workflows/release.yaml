@@ -43,7 +43,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          apt-get install libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
+          sudo apt-get install -y libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev
           go mod download
 
       - name: Build the application
